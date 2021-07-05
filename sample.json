@@ -1,0 +1,297 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "When a game is launched, the MPL SDK is initialized. SDK recognizes from where the game is launched. If the game is launched from the MPL Pro app, it takes the user through the MPL RMG flow. MPL Pro app uses android intent to launch the game. The game gets the gameConfig from the android intent, this gameConfig has all the required detail needed in further flow. The game also receives a lobbyConfig using lobby config API, which has all details of the selected lobby. If the game is launched from the app drawer, SDK loads the free to Play Game scenes.\n",
+    "version": "1.0.0",
+    "title": "MPL Originals"
+  },
+  "host": "virtserver.swaggerhub.com",
+  "basePath": "/navbehl/Originals/1.0.0",
+  "tags": [
+    {
+      "name": "gameLaunch",
+      "description": "Game Launch Integration APIs"
+    },
+    {
+      "name": "lobby",
+      "description": "Lobby specific APIs"
+    },
+    {
+      "name": "results",
+      "description": "Results related APIs"
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/gameplay/partners/authToken": {
+      "post": {
+        "tags": [
+          "gameLaunch"
+        ],
+        "summary": "Auth API",
+        "description": "This API is called for user authentication purposes. Auth token is sent in the request field. Returns user ID and unique event ID (Unique room ID).",
+        "operationId": "getAuth",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Auth token of the user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Auth"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AuthResponse"
+            }
+          }
+        }
+      }
+    },
+    "/gameplay/lobby/{lobbyId}/join": {
+      "get": {
+        "tags": [
+          "lobby"
+        ],
+        "summary": "Get Lobby Details",
+        "description": "This is used to get the game configuration for that lobby. For example, game name, game ID, etc.",
+        "operationId": "getLobby",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "lobbyId",
+            "in": "path",
+            "description": "ID of the lobby",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/LobbyResponse"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value"
+          }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/gameplay/partners/events/score": {
+      "post": {
+        "tags": [
+          "results"
+        ],
+        "summary": "Submit score API",
+        "description": "This API is called for user authentication purposes. Auth token is sent in the request field. Returns user ID and unique event ID (Unique room ID).",
+        "operationId": "submitScore",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Auth token of the user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Auth"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AuthResponse"
+            }
+          }
+        }
+      }
+    },
+    "/gameplay/partners/events": {
+      "delete": {
+        "tags": [
+          "results"
+        ],
+        "summary": "Cancel Match API",
+        "description": "This API is called for user authentication purposes. Auth token is sent in the request field. Returns user ID and unique event ID (Unique room ID).",
+        "operationId": "cancelMatch",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Battle details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "petstore_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
+      "flow": "implicit",
+      "scopes": {
+        "write:pets": "modify pets in your account",
+        "read:pets": "read your pets"
+      }
+    },
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "Auth": {
+      "type": "object",
+      "properties": {
+        "authToken": {
+          "type": "string"
+        }
+      },
+      "description": "User-specific token obtained from Android intent."
+    },
+    "AuthResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/AuthResponse_status"
+        },
+        "payload": {
+          "$ref": "#/definitions/AuthResponse_payload"
+        }
+      }
+    },
+    "LobbyResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/AuthResponse_status"
+        },
+        "payload": {
+          "$ref": "#/definitions/LobbyResponse_payload"
+        }
+      }
+    },
+    "Event": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/Event_id"
+        }
+      }
+    },
+    "AuthResponse_status": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "AuthResponse_payload": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "LobbyResponse_payload": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Every user is assigned a unique auth token. It is used by the game for user authentication."
+        },
+        "canJoin": {
+          "type": "boolean",
+          "description": "Users can join the game if this is true"
+        },
+        "deficit": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Whether the user has the amount required to play in that particular lobby in their account"
+        },
+        "message": {
+          "type": "string",
+          "description": "Displays if there is any message"
+        },
+        "gameData": {
+          "type": "object",
+          "description": "This provides all the information about the game.  For example,  Game Id, Lobby Id, Lobby Fee, Game Timeout, Session Id, avatar, winning amount, collectibles, etc",
+          "properties": {}
+        }
+      }
+    },
+    "Event_id": {
+      "type": "object",
+      "properties": {
+        "evenTyped": {
+          "type": "string"
+        },
+        "eventId": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
